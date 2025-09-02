@@ -26,9 +26,11 @@
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            max-width: 900px;
+            max-width: 1000px;
             width: 100%;
             text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         h1 {
@@ -36,6 +38,18 @@
             margin-bottom: 20px;
             font-size: 2.5em;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin: 20px 0 15px 0;
+            font-size: 1.5em;
         }
 
         .game-menu {
@@ -64,70 +78,68 @@
 
         .game-screen {
             display: none;
+            text-align: left;
         }
 
         .game-screen.active {
             display: block;
         }
 
-        /* Estilos para el simulador de red */
-        .network-simulator {
+        /* Estilos para la sección de teoría */
+        .theory-section {
             background: #f8f9fa;
             border-radius: 15px;
-            padding: 20px;
+            padding: 25px;
             margin: 20px 0;
+            text-align: left;
         }
 
-        .node {
-            width: 60px;
-            height: 60px;
-            background: #4CAF50;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
+        .info-card {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
         }
 
-        .node:hover {
-            transform: scale(1.1);
-            background: #45a049;
+        .info-card ul {
+            margin: 10px 0;
+            padding-left: 20px;
         }
 
-        .node.selected {
-            background: #ff5722;
-            box-shadow: 0 0 20px rgba(255, 87, 34, 0.5);
+        .info-card li {
+            margin: 5px 0;
+            line-height: 1.6;
         }
 
-        .routing-table {
-            background: white;
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
             border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .routing-table table {
+        .table-container table {
             width: 100%;
             border-collapse: collapse;
+            background: white;
         }
 
-        .routing-table th,
-        .routing-table td {
-            padding: 12px;
-            text-align: center;
+        .table-container th,
+        .table-container td {
+            padding: 12px 15px;
+            text-align: left;
             border-bottom: 1px solid #eee;
         }
 
-        .routing-table th {
+        .table-container th {
             background: #667eea;
             color: white;
             font-weight: bold;
+        }
+
+        .table-container tr:hover {
+            background: #f5f5f5;
         }
 
         /* Estilos para trivia */
@@ -185,10 +197,12 @@
             margin: 20px 0;
             font-size: 1.2em;
             font-weight: bold;
+            text-align: center;
         }
 
         .controls {
             margin: 20px 0;
+            text-align: center;
         }
 
         .btn {
@@ -218,27 +232,6 @@
             padding: 15px;
             margin: 10px 0;
             border-radius: 0 10px 10px 0;
-        }
-
-        .network-display {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin: 20px 0;
-            align-items: center;
-            justify-items: center;
-        }
-
-        .connection {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #666;
-            padding: 5px 10px;
-            background: #f0f0f0;
-            border-radius: 15px;
-            margin: 5px;
         }
 
         /* Estilos para Sopa de Letras */
@@ -315,6 +308,50 @@
             border-left-color: #45a049;
             text-decoration: line-through;
         }
+
+        /* Estilos para matching game */
+        .matching-item {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .matching-item:hover {
+            transform: scale(1.02);
+        }
+
+        .matching-item.selected {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .matching-item.matched {
+            background: #d4edda !important;
+            border-color: #28a745 !important;
+            cursor: default;
+        }
+
+        .matching-columns {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .matching-column {
+            flex: 1;
+            max-width: 45%;
+        }
+
+        .matching-column h4 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #667eea;
+            font-size: 1.3em;
+        }
     </style>
 </head>
 <body>
@@ -323,16 +360,16 @@
         
         <!-- Menú Principal -->
         <div id="main-menu" class="game-screen active">
-            <p style="font-size: 1.2em; color: #666; margin-bottom: 30px;">
+            <p style="font-size: 1.2em; color: #666; margin-bottom: 30px; text-align: center;">
                 Aprende sobre enrutamiento estático, dinámico y algoritmos de vector distancia
             </p>
             
             <div class="game-menu">
+                <button class="game-option" onclick="startGame('theory')">
+                    📚 Teoría de Enrutamiento
+                </button>
                 <button class="game-option" onclick="startGame('trivia')">
                     🧠 Trivia de Enrutamiento
-                </button>
-                <button class="game-option" onclick="startGame('simulator')">
-                    🔧 Simulador de Red
                 </button>
                 <button class="game-option" onclick="startGame('algorithm')">
                     📊 Vector Distancia
@@ -346,72 +383,95 @@
             </div>
         </div>
 
-<!-- Teoria -->
-<section id="theory" class="content-section">
-    <h2>Teoría: Enrutamiento Estático y Dinámico</h2>
-    <p>El enrutamiento es el proceso mediante el cual un router selecciona el mejor camino para enviar paquetes hacia su destino. 
-    Existen dos enfoques principales: <b>enrutamiento estático</b> y <b>enrutamiento dinámico</b>.</p>
+        <!-- Sección de Teoría -->
+        <div id="theory-game" class="game-screen">
+            <h2>📚 Teoría: Enrutamiento Estático y Dinámico</h2>
+            
+            <div class="theory-section">
+                <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 20px;">
+                    El enrutamiento es el proceso mediante el cual un router selecciona el mejor camino para enviar paquetes hacia su destino. 
+                    Existen dos enfoques principales: <strong>enrutamiento estático</strong> y <strong>enrutamiento dinámico</strong>.
+                </p>
 
-    <h3>Enrutamiento Estático</h3>
-    <p>Es aquel en el que las rutas son configuradas manualmente por el administrador de red. 
-    Se utilizan en redes pequeñas o con topologías muy estables.</p>
-    <div class="info-card">
-        <ul>
-            <li><b>Ventajas:</b> Simplicidad, bajo consumo de recursos, mayor control del tráfico.</li>
-            <li><b>Desventajas:</b> No se adapta a cambios automáticamente, difícil de administrar en redes grandes.</li>
-        </ul>
-    </div>
+                <h3>Enrutamiento Estático</h3>
+                <p style="line-height: 1.6; margin-bottom: 15px;">
+                    Es aquel en el que las rutas son configuradas manualmente por el administrador de red. 
+                    Se utilizan en redes pequeñas o con topologías muy estables.
+                </p>
+                <div class="info-card">
+                    <ul>
+                        <li><strong>Ventajas:</strong> Simplicidad, bajo consumo de recursos, mayor control del tráfico.</li>
+                        <li><strong>Desventajas:</strong> No se adapta a cambios automáticamente, difícil de administrar en redes grandes.</li>
+                    </ul>
+                </div>
 
-    <h3>Enrutamiento Dinámico</h3>
-    <p>Utiliza protocolos de enrutamiento para que los routers intercambien información y ajusten automáticamente sus tablas de enrutamiento. 
-    Ejemplos de protocolos son <b>RIP, OSPF, EIGRP y BGP</b>.</p>
-    <div class="info-card">
-        <ul>
-            <li><b>Ventajas:</b> Adaptabilidad a cambios, escalabilidad en redes grandes.</li>
-            <li><b>Desventajas:</b> Mayor consumo de CPU, memoria y ancho de banda; más complejo de configurar.</li>
-        </ul>
-    </div>
+                <h3>Enrutamiento Dinámico</h3>
+                <p style="line-height: 1.6; margin-bottom: 15px;">
+                    Utiliza protocolos de enrutamiento para que los routers intercambien información y ajusten automáticamente sus tablas de enrutamiento. 
+                    Ejemplos de protocolos son <strong>RIP, OSPF, EIGRP y BGP</strong>.
+                </p>
+                <div class="info-card">
+                    <ul>
+                        <li><strong>Ventajas:</strong> Adaptabilidad a cambios, escalabilidad en redes grandes.</li>
+                        <li><strong>Desventajas:</strong> Mayor consumo de CPU, memoria y ancho de banda; más complejo de configurar.</li>
+                    </ul>
+                </div>
 
-    <h3>Comparación</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Característica</th>
-                    <th>Estático</th>
-                    <th>Dinámico</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Configuración</td>
-                    <td>Manual</td>
-                    <td>Automática (protocolos)</td>
-                </tr>
-                <tr>
-                    <td>Escalabilidad</td>
-                    <td>Baja</td>
-                    <td>Alta</td>
-                </tr>
-                <tr>
-                    <td>Adaptación a fallos</td>
-                    <td>Nula</td>
-                    <td>Automática</td>
-                </tr>
-                <tr>
-                    <td>Uso de recursos</td>
-                    <td>Bajo</td>
-                    <td>Moderado/Alto</td>
-                    
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</section>
-</script>
+                <h3>Comparación</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Característica</th>
+                                <th>Estático</th>
+                                <th>Dinámico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Configuración</td>
+                                <td>Manual</td>
+                                <td>Automática (protocolos)</td>
+                            </tr>
+                            <tr>
+                                <td>Escalabilidad</td>
+                                <td>Baja</td>
+                                <td>Alta</td>
+                            </tr>
+                            <tr>
+                                <td>Adaptación a fallos</td>
+                                <td>Nula</td>
+                                <td>Automática</td>
+                            </tr>
+                            <tr>
+                                <td>Uso de recursos</td>
+                                <td>Bajo</td>
+                                <td>Moderado/Alto</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Protocolos de Enrutamiento Dinámico</h3>
+                <div class="info-card">
+                    <ul>
+                        <li><strong>RIP (Routing Information Protocol):</strong> Usa vector distancia, máximo 15 saltos.</li>
+                        <li><strong>OSPF (Open Shortest Path First):</strong> Protocolo de estado de enlace, usa algoritmo Dijkstra.</li>
+                        <li><strong>EIGRP (Enhanced Interior Gateway Routing Protocol):</strong> Protocolo híbrido de Cisco.</li>
+                        <li><strong>BGP (Border Gateway Protocol):</strong> Protocolo para enrutamiento entre sistemas autónomos.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn secondary" onclick="showMenu()">Menú Principal</button>
+            </div>
+        </div>
 
         <!-- Trivia Game -->
         <div id="trivia-game" class="game-screen">
+            <h2>🧠 Trivia de Enrutamiento</h2>
+            
             <div class="score-board">
                 Puntuación: <span id="score">0</span> / <span id="total-questions">0</span>
             </div>
@@ -426,49 +486,9 @@
             </div>
         </div>
 
-        <!-- Simulador de Red -->
-        <div id="network-simulator" class="game-screen">
-            <h2>Simulador de Red - Configuración de Rutas</h2>
-            
-            <div class="network-display">
-                <div class="node" id="nodeA" onclick="selectNode('A')">A</div>
-                <div class="connection">2</div>
-                <div class="node" id="nodeB" onclick="selectNode('B')">B</div>
-                <div class="connection">3</div>
-                <div class="node" id="nodeC" onclick="selectNode('C')">C</div>
-                <div class="connection">1</div>
-                <div class="node" id="nodeD" onclick="selectNode('D')">D</div>
-                <div class="connection">4</div>
-                <div class="node" id="nodeE" onclick="selectNode('E')">E</div>
-            </div>
-
-            <div class="routing-table">
-                <h3>Tabla de Enrutamiento - Nodo <span id="selected-node">A</span></h3>
-                <table id="routing-table">
-                    <thead>
-                        <tr>
-                            <th>Destino</th>
-                            <th>Distancia</th>
-                            <th>Siguiente Salto</th>
-                            <th>Tipo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Se llenará dinámicamente -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="controls">
-                <button class="btn" onclick="calculateRoutes()">Calcular Rutas Dinámicas</button>
-                <button class="btn" onclick="resetNetwork()">Reiniciar Red</button>
-                <button class="btn secondary" onclick="showMenu()">Menú Principal</button>
-            </div>
-        </div>
-
         <!-- Algoritmo Vector Distancia -->
         <div id="algorithm-game" class="game-screen">
-            <h2>Algoritmo de Vector Distancia (Bellman-Ford)</h2>
+            <h2>📊 Algoritmo de Vector Distancia (Bellman-Ford)</h2>
             
             <div id="algorithm-steps">
                 <!-- Los pasos se mostrarán aquí -->
@@ -490,14 +510,14 @@
 
         <!-- Juego de Unir Conceptos -->
         <div id="matching-game" class="game-screen">
-            <h2>Unir Conceptos de Enrutamiento</h2>
-            
-            <div id="matching-area">
-                <!-- El juego de matching se cargará aquí -->
-            </div>
+            <h2>🎯 Unir Conceptos de Enrutamiento</h2>
             
             <div class="score-board">
                 Aciertos: <span id="matches">0</span> / <span id="total-matches">6</span>
+            </div>
+            
+            <div id="matching-area" class="matching-columns">
+                <!-- El juego de matching se cargará aquí -->
             </div>
             
             <div class="controls">
@@ -545,7 +565,6 @@
         // Variables globales
         let currentScore = 0;
         let currentQuestion = 0;
-        let selectedNode = 'A';
         let algorithmStep = 0;
         let matchingPairs = 0;
 
@@ -580,17 +599,18 @@
                 question: "¿Con qué frecuencia RIP envía actualizaciones por defecto?",
                 options: ["15 segundos", "30 segundos", "60 segundos", "90 segundos"],
                 correct: 1
+            },
+            {
+                question: "¿Qué protocolo usa el algoritmo de Dijkstra?",
+                options: ["RIP", "OSPF", "BGP", "EIGRP"],
+                correct: 1
+            },
+            {
+                question: "¿Qué significa AS en el contexto de BGP?",
+                options: ["Application Server", "Autonomous System", "Access Switch", "Administrative Station"],
+                correct: 1
             }
         ];
-
-        // Datos de la red
-        const networkTopology = {
-            A: { B: 2, D: 3 },
-            B: { A: 2, C: 1, E: 4 },
-            C: { B: 1, E: 2 },
-            D: { A: 3, E: 1 },
-            E: { B: 4, C: 2, D: 1 }
-        };
 
         // Conceptos para matching
         const matchingConcepts = [
@@ -607,13 +627,12 @@
             document.getElementById('main-menu').classList.remove('active');
             
             switch(gameType) {
+                case 'theory':
+                    document.getElementById('theory-game').classList.add('active');
+                    break;
                 case 'trivia':
                     document.getElementById('trivia-game').classList.add('active');
                     startTrivia();
-                    break;
-                case 'simulator':
-                    document.getElementById('network-simulator').classList.add('active');
-                    initializeNetworkSimulator();
                     break;
                 case 'algorithm':
                     document.getElementById('algorithm-game').classList.add('active');
@@ -714,126 +733,6 @@
             `;
         }
 
-        // Funciones del Simulador de Red
-        function initializeNetworkSimulator() {
-            selectedNode = 'A';
-            updateNodeSelection();
-            updateRoutingTable();
-        }
-
-        function selectNode(node) {
-            selectedNode = node;
-            updateNodeSelection();
-            updateRoutingTable();
-        }
-
-        function updateNodeSelection() {
-            // Limpiar selecciones previas
-            document.querySelectorAll('.node').forEach(node => {
-                node.classList.remove('selected');
-            });
-            
-            // Seleccionar nodo actual
-            document.getElementById('node' + selectedNode).classList.add('selected');
-            document.getElementById('selected-node').textContent = selectedNode;
-        }
-
-        function updateRoutingTable() {
-            const table = document.getElementById('routing-table').getElementsByTagName('tbody')[0];
-            table.innerHTML = '';
-
-            // Obtener rutas para el nodo seleccionado
-            const routes = calculateShortestPaths(selectedNode);
-            
-            Object.keys(routes).forEach(dest => {
-                if (dest !== selectedNode) {
-                    const row = table.insertRow();
-                    row.insertCell(0).textContent = dest;
-                    row.insertCell(1).textContent = routes[dest].distance === Infinity ? '∞' : routes[dest].distance;
-                    row.insertCell(2).textContent = routes[dest].nextHop || '-';
-                    row.insertCell(3).textContent = routes[dest].distance === Infinity ? 'Inalcanzable' : 'Dinámico';
-                }
-            });
-        }
-
-        function calculateShortestPaths(source) {
-            const distances = {};
-            const nextHop = {};
-            const visited = {};
-
-            // Inicializar distancias
-            Object.keys(networkTopology).forEach(node => {
-                distances[node] = node === source ? 0 : Infinity;
-                nextHop[node] = null;
-                visited[node] = false;
-            });
-
-            // Algoritmo de Dijkstra simplificado
-            for (let i = 0; i < Object.keys(networkTopology).length; i++) {
-                let minNode = null;
-                let minDistance = Infinity;
-
-                // Encontrar el nodo no visitado con menor distancia
-                Object.keys(distances).forEach(node => {
-                    if (!visited[node] && distances[node] < minDistance) {
-                        minDistance = distances[node];
-                        minNode = node;
-                    }
-                });
-
-                if (minNode === null) break;
-                visited[minNode] = true;
-
-                // Actualizar distancias a vecinos
-                if (networkTopology[minNode]) {
-                    Object.keys(networkTopology[minNode]).forEach(neighbor => {
-                        const newDistance = distances[minNode] + networkTopology[minNode][neighbor];
-                        if (newDistance < distances[neighbor]) {
-                            distances[neighbor] = newDistance;
-                            nextHop[neighbor] = minNode === source ? neighbor : nextHop[minNode];
-                        }
-                    });
-                }
-            }
-
-            // Formatear resultado
-            const result = {};
-            Object.keys(distances).forEach(node => {
-                result[node] = {
-                    distance: distances[node],
-                    nextHop: nextHop[node]
-                };
-            });
-
-            return result;
-        }
-
-        function calculateRoutes() {
-            updateRoutingTable();
-            
-            // Mostrar mensaje de actualización
-            const steps = document.createElement('div');
-            steps.className = 'algorithm-step';
-            steps.innerHTML = `<strong>Rutas calculadas para el nodo ${selectedNode}</strong><br>
-                              Se ha ejecutado el algoritmo de vector distancia para encontrar las rutas más cortas.`;
-            
-            // Insertar al principio del contenedor
-            const container = document.getElementById('network-simulator');
-            container.insertBefore(steps, container.querySelector('.controls'));
-            
-            // Remover el mensaje después de 3 segundos
-            setTimeout(() => steps.remove(), 3000);
-        }
-
-        function resetNetwork() {
-            selectedNode = 'A';
-            updateNodeSelection();
-            updateRoutingTable();
-            
-            // Limpiar mensajes de algoritmo
-            document.querySelectorAll('.algorithm-step').forEach(step => step.remove());
-        }
-
         // Funciones del Algoritmo Vector Distancia
         function initializeAlgorithm() {
             algorithmStep = 0;
@@ -858,37 +757,44 @@
             const container = document.getElementById('distance-tables');
             container.innerHTML = '<h4>Iteración 0 - Estado inicial</h4>';
             
-            Object.keys(networkTopology).forEach(node => {
-                const table = createDistanceTable(node, 0);
+            const nodes = ['A', 'B', 'C', 'D'];
+            const topology = {
+                A: { B: 2, D: 3 },
+                B: { A: 2, C: 1 },
+                C: { B: 1, D: 4 },
+                D: { A: 3, C: 4 }
+            };
+            
+            nodes.forEach(node => {
+                const table = createDistanceTable(node, 0, topology);
                 container.appendChild(table);
             });
         }
 
-        function createDistanceTable(node, iteration) {
+        function createDistanceTable(node, iteration, topology) {
             const div = document.createElement('div');
-            div.style.display = 'inline-block';
-            div.style.margin = '10px';
-            div.style.background = '#f8f9fa';
-            div.style.padding = '10px';
-            div.style.borderRadius = '8px';
+            div.style.cssText = 'display: inline-block; margin: 10px; background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
             
-            let tableHTML = `<h5>Nodo ${node}</h5><table style="border-collapse: collapse; font-size: 0.9em;">
-                            <tr><th style="border: 1px solid #ddd; padding: 5px;">Dest</th><th style="border: 1px solid #ddd; padding: 5px;">Dist</th></tr>`;
+            let tableHTML = `<h5 style="text-align: center; margin-bottom: 10px; color: #667eea;">Nodo ${node}</h5>
+                            <table style="border-collapse: collapse; font-size: 0.9em;">
+                            <tr><th style="border: 1px solid #ddd; padding: 8px; background: #667eea; color: white;">Dest</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; background: #667eea; color: white;">Dist</th></tr>`;
             
-            Object.keys(networkTopology).forEach(dest => {
+            const nodes = ['A', 'B', 'C', 'D'];
+            nodes.forEach(dest => {
                 let distance;
                 if (dest === node) {
                     distance = 0;
                 } else if (iteration === 0) {
-                    distance = networkTopology[node][dest] || '∞';
+                    distance = topology[node] && topology[node][dest] ? topology[node][dest] : '∞';
                 } else {
-                    // Aquí se calcularía la distancia en iteraciones posteriores
-                    distance = networkTopology[node][dest] || '∞';
+                    distance = topology[node] && topology[node][dest] ? topology[node][dest] : '∞';
                 }
                 
-                tableHTML += `<tr><td style="border: 1px solid #ddd; padding: 5px;">${dest}</td><td style="border: 1px solid #ddd; padding: 5px;">${distance}</td></tr>`;
+                tableHTML += `<tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${dest}</td>
+                             <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${distance}</td></tr>`;
             });
-            
+              
             tableHTML += '</table>';
             div.innerHTML = tableHTML;
             return div;
